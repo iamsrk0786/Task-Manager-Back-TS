@@ -23,8 +23,8 @@ export const createTask = async (
     const newTask = await taskService.createTask({
       title,
       description,
-      priority,
-      statuss,
+      priority: priority || "High", 
+      statuss: statuss || "To-Do",   
     });
     res.status(201).json(newTask);
   } catch (error) {
@@ -41,8 +41,8 @@ export const updateTask = async (
     const updatedTask = await taskService.updateTask(id, {
       title,
       description,
-      priority,
-      statuss,
+      priority: priority || "High", 
+      statuss: statuss || "To-Do",      
     });
     if (!updatedTask) {
       res.status(404).json({ message: "Task not found" });
