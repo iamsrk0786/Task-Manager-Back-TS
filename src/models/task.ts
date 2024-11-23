@@ -1,17 +1,29 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface ITask extends Document {
   title: string;
   description: string;
-  completed: boolean;
+  priority: "High" | "Medium" | "Low";
+  statuss: "To-Do" | "In-Progress" | "Completed";
+  dueDate?: Date;
 }
 
 const taskSchema: Schema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  completed: { type: Boolean, default: false },
+  priority: {
+    type: String,
+    enum: ["High", "Medium", "Low"],
+    default: "High",
+  },
+  statuss: {
+    type: String,
+    enum: ["To-Do", "In-Progress", "Completed"],
+    default: "To-Do",
+  },
+  dueDate: { type: Date },
 });
 
-const Task = mongoose.model<ITask>('Task', taskSchema);
+const Task = mongoose.model<ITask>("Task", taskSchema);
 
 export default Task;
