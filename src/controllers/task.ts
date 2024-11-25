@@ -6,7 +6,7 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
     const { search, sort } = req.query;
     const tasks = await taskService.getAllTasks(
       search as string | null,
-      sort as "title" | "priority" | "statuss" | null
+      sort as "title" | "priority" | "statuss" | "dueAsc" | "dueDesc" | null
     );
     res.status(200).json(tasks);
   } catch (error) {
@@ -19,12 +19,13 @@ export const createTask = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { title, description, priority, statuss } = req.body;
+    const { title, description, priority, statuss, dueDate } = req.body;
     const newTask = await taskService.createTask({
       title,
       description,
       priority: priority || "High", 
       statuss: statuss || "To-Do",   
+      dueDate,
     });
     res.status(201).json(newTask);
   } catch (error) {
@@ -37,12 +38,13 @@ export const updateTask = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { title, description, priority, statuss } = req.body;
+    const { title, description, priority, statuss, dueDate } = req.body;
     const updatedTask = await taskService.updateTask(id, {
       title,
       description,
       priority: priority || "High", 
-      statuss: statuss || "To-Do",      
+      statuss: statuss || "To-Do",  
+      dueDate,
     });
     if (!updatedTask) {
       res.status(404).json({ message: "Task not found" });

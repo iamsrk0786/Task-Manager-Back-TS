@@ -5,7 +5,7 @@ export interface ITask extends Document {
   description: string;
   priority: "High" | "Medium" | "Low";
   statuss: "To-Do" | "In-Progress" | "Completed";
-  dueDate?: Date;
+  dueDate?: Date|null;
 }
 
 const taskSchema: Schema = new Schema({
