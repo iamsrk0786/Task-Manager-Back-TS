@@ -1,8 +1,9 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import connectDB from './config/connect';
-import taskRoutes from './routes/task';
+import express, { Request, Response } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./config/connect";
+import taskRoutes from "./routes/task";
+import userRoutes from "./routes/user";
 
 dotenv.config();
 
@@ -15,14 +16,14 @@ connectDB();
 // Enable CORS
 app.use(cors());
 
-
 // Middleware
 app.use(express.json());
-app.use('/api', taskRoutes);
+app.use("/api", taskRoutes);
+app.use("/api", userRoutes);
 
 // Root route
-app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to the Task Manager API');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Welcome to the Task Manager API");
 });
 
 // Start the server
@@ -30,7 +31,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-
-
 //Run npm run dev for development with nodemon or npm start after building the project with npm run build.
-

@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import * as taskService from "../services/task";
+interface AuthRequest extends Request {
+  user?: any;
+}
 
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -13,38 +16,60 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Error fetching tasks" });
   }
 };
+export const taskById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {id} = req.params;
+    const task = await taskService.getTaskById(id);
+    if (!task) {
+      res.status(404).json({ message: "Task not found" });
+    }
+    res.status(200).json(task);
+  } catch (e) {
+    res.status(500).json({ message: "Error fetching task" });
+  }
+};
 
-export const createTask = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const createTask = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { title, description, priority, statuss, dueDate } = req.body;
+
+    if (!title || !req.user) {
+      res.status(400).json({ message: "Title and user are required" });
+    }
+
     const newTask = await taskService.createTask({
       title,
       description,
-      priority: priority || "High", 
-      statuss: statuss || "To-Do",   
+      priority: priority || "High",
+      statuss: statuss || "To-Do",
       dueDate,
+      user: req.user.id, // Pass the user's ID only
     });
+
     res.status(201).json(newTask);
   } catch (error) {
+    console.error(error); // Log errors for debugging
     res.status(500).json({ message: "Error creating task" });
   }
 };
+
 export const updateTask = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
     const { title, description, priority, statuss, dueDate } = req.body;
+    if (!title || !req.user) {
+      res.status(400).json({ message: "Title and user are required" });
+    }
     const updatedTask = await taskService.updateTask(id, {
       title,
       description,
-      priority: priority || "High", 
-      statuss: statuss || "To-Do",  
+      priority: priority || "High",
+      statuss: statuss || "To-Do",
       dueDate,
+      user:req.user.id,
     });
     if (!updatedTask) {
       res.status(404).json({ message: "Task not found" });
@@ -62,6 +87,7 @@ export const deleteTask = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
+    
     const deletedTask = await taskService.deleteTask(id);
     if (!deletedTask) {
       res.status(404).json({ message: "Task not found" });

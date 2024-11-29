@@ -5,4 +5,9 @@ export interface ITask {
     priority: "High" | "Medium" | "Low";
     statuss: "To-Do" | "In-Progress" | "Completed";
   }
-  
+  export interface IUser {
+    Name: string;
+    Email: string;
+    Password: string;
+    createdAt?: Date|null;
+  }

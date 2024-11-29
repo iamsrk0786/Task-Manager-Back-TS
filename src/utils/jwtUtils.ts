@@ -1,0 +1,15 @@
+import jwt from "jsonwebtoken";
+
+const secretKey = "your-secret-key"; // Replace with an environment variable
+
+export const generateToken = (payload: object): string => {
+  return jwt.sign(payload, secretKey, { expiresIn: "1h" });
+};
+
+export const verifyToken = (token: string): object | string => {
+  try {
+    return jwt.verify(token, secretKey);
+  } catch (error) {
+    throw new Error("Invalid or expired token");
+  }
+};

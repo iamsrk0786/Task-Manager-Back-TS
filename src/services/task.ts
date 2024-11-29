@@ -50,19 +50,38 @@ export const getAllTasks = async (
 
   return tasks;
 };
-
-export const createTask = async (taskData: Partial<ITask>): Promise<ITask> => {
-  const task = new Task(taskData);
-  return task.save();
+export const getTaskById = async (id: string): Promise<ITask | null> => {
+  const task = await Task.findById(id);
+  return task;
 };
+export const createTask = async (taskData: Partial<ITask>): Promise<ITask> => {
+  if (!taskData.title || !taskData.user) {
+    throw new Error("Title and user are required to create a task");
+  }
+
+  const task = new Task({
+    ...taskData,
+    user: taskData.user, // Ensure user is passed and mapped correctly
+  });
+
+  return await task.save();
+};
+
 export const updateTask = async (
   id: string,
   taskData: Partial<ITask>
 ): Promise<ITask | null> => {
-  return Task.findByIdAndUpdate(id, taskData, {
-    new: true,
-    runValidators: true,
-  });
+  if (!taskData.title || !taskData.user) {
+    throw new Error("Title and user are required to Update a task");
+  }
+  return Task.findByIdAndUpdate(
+    id,
+    { ...taskData, user: taskData.user },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 };
 export const deleteTask = async (taskId: string): Promise<ITask | null> => {
   return Task.findByIdAndDelete(taskId);
