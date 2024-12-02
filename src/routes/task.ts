@@ -1,34 +1,21 @@
 import { Router } from "express";
 import * as taskController from "../controllers/task";
 import authMiddleware from "../middleware/auth";
-import checkTaskOwnership from "../middleware/taskcheck";
 
 const router = Router();
 
-router.get(
-  "/tasks",
-  authMiddleware,
-//   checkTaskOwnership,
-  taskController.getTasks
-);
-router.get(
-  "/tasks/:id",
-  authMiddleware,
-  checkTaskOwnership,
-  taskController.taskById
-);
+// router.get(
+//   "/tasks",
+//   authMiddleware,
+//   taskController.getTasks
+// );
+router.get("/tasks/my", authMiddleware, taskController.taskById);
 router.post("/tasks", authMiddleware, taskController.createTask);
-router.delete(
-  "/tasks/:id",
-  authMiddleware,
-  checkTaskOwnership,
-  taskController.deleteTask
-);
-router.put(
-  "/tasks/:id",
-  authMiddleware,
-  checkTaskOwnership,
-  taskController.updateTask
-);
+// router.delete("/tasks/:id", authMiddleware, taskController.deleteTask);
+// router.put("/tasks/:id", authMiddleware, taskController.updateTask);
+router
+  .route("/tasks/:id")
+  .put(authMiddleware, taskController.updateTask)
+  .delete(authMiddleware, taskController.deleteTask);
 
 export default router;

@@ -1,26 +1,6 @@
-// import mongoose, { Schema, Document } from "mongoose";
-
-// export interface IUser extends Document {
-//   Name: string;
-//   Email: string;
-//   Password: string;
-//   createdAt?: Date | null;
-// }
-
-// const userSchema:Schema<IUser> = new Schema({
-//   Name: { type: String, required: true },
-//   Email: { type: String, required: true, unique: true },
-//   Password: { type: String, required: true },
-//   createdAt: { type: Date, default: Date.now },
-// });
-
-// const User = mongoose.model<IUser>("User", userSchema);
-// export default User;
-
 import mongoose, { Schema, Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
 
-// Define User Interface
 export interface IUser extends Document {
   username: string;
   email: string;
@@ -28,7 +8,6 @@ export interface IUser extends Document {
   comparePassword: (password: string) => Promise<boolean>;
 }
 
-// Define User Schema
 const UserSchema: Schema<IUser> = new Schema(
   {
     username: {
